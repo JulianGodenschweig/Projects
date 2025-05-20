@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkChat Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner-circle"></div>
+      <div class="spinner-circle"></div>
+      <div class="spinner-circle"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar animate__animated animate__fadeInLeft">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-comments"></i>
+          <span>WorkChat</span>
+        </div>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-item active" data-page="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </div>
+        <div class="menu-item" data-page="clients">
+          <i class="fas fa-users"></i>
+          <span>Clients</span>
+        </div>
+        <div class="menu-item" data-page="analytics">
+          <i class="fas fa-chart-line"></i>
+          <span>Team Analytics</span>
+        </div>
+        <div class="menu-item" data-page="messages">
+          <i class="fas fa-comment-dots"></i>
+          <span>Messages</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <nav class="top-nav animate__animated animate__fadeInDown">
+        <div class="nav-left">
+          <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="page-title">Dashboard</h1>
+        </div>
+        <div class="nav-right">
+          <button class="quick-action-btn" id="new-client-btn">
+            <i class="fas fa-plus"></i>
+            <span>New Client</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <div class="page-wrapper">
+        <!-- Dashboard Page -->
+        <div class="page-content active animate__animated animate__fadeIn" id="dashboard-page">
+          <div class="stats-grid">
+            <div class="stat-card animate__animated animate__fadeInUp animate__delay-1s">
+              <div class="stat-icon clients">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Total Clients</h3>
+                <p class="stat-value" id="total-clients">0</p>
+                <p class="stat-change">
+                  <i class="fas fa-sync-alt"></i> Real-time
+                </p>
+              </div>
+            </div>
+            
+            <div class="stat-card animate__animated animate__fadeInUp animate__delay-2s">
+              <div class="stat-icon active">
+                <i class="fas fa-user-check"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Active Clients</h3>
+                <p class="stat-value" id="active-clients">0</p>
+                <p class="stat-change">
+                  <i class="fas fa-sync-alt"></i> Real-time
+                </p>
+              </div>
+            </div>
+            
+            <div class="stat-card animate__animated animate__fadeInUp animate__delay-3s">
+              <div class="stat-icon team">
+                <i class="fas fa-user-friends"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Team Online</h3>
+                <p class="stat-value" id="team-online">0</p>
+                <p class="stat-change">
+                  <i class="fas fa-sync-alt"></i> Real-time
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="recent-clients card animate__animated animate__fadeInUp animate__delay-1s">
+            <div class="card-header">
+              <h2>Recent Clients</h2>
+            </div>
+            <div class="client-list" id="recent-clients-list">
+              <div class="empty-state">
+                <i class="fas fa-user-plus"></i>
+                <p>No clients added yet</p>
+                <button class="primary-btn" id="empty-add-client">
+                  <i class="fas fa-plus"></i>
+                  Add Your First Client
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clients Page -->
+        <div class="page-content animate__animated" id="clients-page">
+          <div class="clients-header animate__animated animate__fadeInDown">
+            <h2>Client Management</h2>
+            <div class="actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="client-search" placeholder="Search clients...">
+              </div>
+            </div>
+          </div>
+          
+          <div class="clients-table-container animate__animated animate__fadeIn">
+            <div class="table-responsive">
+              <table id="clients-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Company</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="clients-table-body">
+                  <tr class="empty-row">
+                    <td colspan="6">
+                      <div class="empty-state">
+                        <i class="fas fa-user-plus"></i>
+                        <p>No clients found</p>
+                        <button class="primary-btn" id="table-add-client">
+                          <i class="fas fa-plus"></i>
+                          Add New Client
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div class="page-content animate__animated" id="analytics-page">
+          <div class="analytics-header animate__animated animate__fadeInDown">
+            <h2>Team Analytics</h2>
+            <div class="time-filters">
+              <button class="time-filter active">Today</button>
+              <button class="time-filter">Week</button>
+              <button class="time-filter">Month</button>
+            </div>
+          </div>
+
+          <div class="analytics-grid">
+            <!-- Online Team Members -->
+            <div class="card team-presence animate__animated animate__fadeInLeft">
+              <div class="card-header">
+                <h3>Team Online Now</h3>
+                <div class="online-count">
+                  <span class="active-dots"></span>
+                  <span id="online-count">0</span> online
+                </div>
+              </div>
+              <div class="team-list" id="team-list">
+                <div class="empty-state">
+                  <i class="fas fa-user-clock"></i>
+                  <p>No team members online</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity Chart -->
+            <div class="card activity-chart animate__animated animate__fadeInRight">
+              <div class="card-header">
+                <h3>Team Activity</h3>
+                <div class="chart-legend">
+                  <span><i class="fas fa-circle online"></i> Online</span>
+                  <span><i class="fas fa-circle active"></i> Active</span>
+                  <span><i class="fas fa-circle away"></i> Away</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="activity-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Recent Messages -->
+            <div class="card recent-messages animate__animated animate__fadeInUp">
+              <div class="card-header">
+                <h3>Recent Messages</h3>
+                <button class="view-all">View All</button>
+              </div>
+              <div class="messages-list" id="messages-list">
+                <div class="empty-state">
+                  <i class="fas fa-comment-alt"></i>
+                  <p>No recent messages</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages Page -->
+        <div class="page-content animate__animated" id="messages-page">
+          <div class="messages-header animate__animated animate__fadeInDown">
+            <h2>Team Messages</h2>
+            <div class="actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="message-search" placeholder="Search messages...">
+              </div>
+              <button class="primary-btn new-message-btn">
+                <i class="fas fa-plus"></i>
+                New Message
+              </button>
+            </div>
+          </div>
+          
+          <div class="messages-container animate__animated animate__fadeIn">
+            <div class="conversation-list">
+              <!-- Conversation list would go here -->
+            </div>
+            <div class="message-view">
+              <!-- Message view would go here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Client Form Modal -->
+        <div class="modal-overlay" id="client-modal">
+          <div class="modal-container animate__animated animate__zoomIn">
+            <div class="modal-header">
+              <h3>Create New Client</h3>
+              <button class="close-modal" id="close-modal">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <form id="client-form">
+              <div class="form-grid">
+                <div class="form-group animate__animated animate__fadeInLeft">
+                  <label for="client-name">Full Name*</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="client-name" placeholder="John Doe" required>
+                  </div>
+                </div>
+                
+                <div class="form-group animate__animated animate__fadeInRight">
+                  <label for="client-company">Company</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-building"></i>
+                    <input type="text" id="client-company" placeholder="Acme Inc.">
+                  </div>
+                </div>
+                
+                <div class="form-group animate__animated animate__fadeInLeft">
+                  <label for="client-email">Email*</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="client-email" placeholder="john@example.com" required>
+                  </div>
+                </div>
+                
+                <div class="form-group animate__animated animate__fadeInRight">
+                  <label for="client-phone">Phone</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="client-phone" placeholder="(123) 456-7890">
+                  </div>
+                </div>
+                
+                <div class="form-group animate__animated animate__fadeInLeft">
+                  <label for="client-status">Status</label>
+                  <div class="select-with-icon">
+                    <i class="fas fa-circle"></i>
+                    <select id="client-status">
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="lead">Lead</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-group animate__animated animate__fadeInRight">
+                  <label for="client-notes">Notes</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-sticky-note"></i>
+                    <textarea id="client-notes" placeholder="Add any important notes about this client..."></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-actions animate__animated animate__fadeInUp">
+                <button type="button" class="secondary-btn" id="cancel-client">
+                  Cancel
+                </button>
+                <button type="submit" class="primary-btn">
+                  Save Client
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
